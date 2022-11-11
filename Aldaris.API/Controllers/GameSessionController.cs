@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Aldaris.API.Domain;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aldaris.API.Controllers;
@@ -10,35 +11,89 @@ public class GameSessionController : ControllerBase
 {
     private readonly ILogger<GameSessionController> _logger;
     private readonly Random _random;
+    private readonly Mapper _mapper;
 
-    public GameSessionController(ILogger<GameSessionController> logger)
+    public GameSessionController(
+        ILogger<GameSessionController> logger,
+        Mapper mapper)
     {
         _logger = logger;
+        _mapper = mapper;
         _random = Random.Shared;
     }
 
     [HttpPost("StartGame")]
-    public GameSession Create(string userName)
+    public GameSessionResponse Create([Required] string userName)
     {
         var session = new GameSession();
         session.UserName = userName;
 
         _logger.LogDebug($"New session: {session.Id}");
 
-        return new GameSession();
+        var response = _mapper.Map<GameSessionResponse>(session);
+        return response;
     }
 
     [HttpGet("{sessionId}")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-    public GameSession Get(Guid sessionId)
+    public GameSessionResponse Get(Guid sessionId)
     {
         var session = new GameSession(sessionId);
 
-        return session;
+        var response = _mapper.Map<GameSessionResponse>(session);
+        return response;
     }
-    
+
+    [HttpGet("{sessionId}/GetAnswers")]
+    [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
+    public IEnumerable<QuestionResponse> GetAnswers(Guid sessionId)
+    {
+        var session = new GameSession(sessionId);
+
+        for (int i = 0; i < 5; i++)
+        {
+            var question = new QuestionResponse()
+            {
+                Id = _random.Next(100),
+                Text =
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                AnswerOptions = new List<QuestionResponse.AnswerOption>()
+                {
+                    new()
+                    {
+                        AnswerId = _random.Next(20),
+                        Text = "Yes"
+                    },
+                    new()
+                    {
+                        AnswerId = _random.Next(20),
+                        Text = "No"
+                    },
+                    new()
+                    {
+                        AnswerId = _random.Next(20),
+                        Text = "I don't know"
+                    },
+                    new()
+                    {
+                        AnswerId = _random.Next(20),
+                        Text = "Probably"
+                    },
+                    new()
+                    {
+                        AnswerId = _random.Next(20),
+                        Text = "Probably not"
+                    },
+                }
+            };
+            question.AnswerId = question.AnswerOptions[_random.Next(5)].AnswerId;
+
+            yield return question;
+        }
+    }
+
     [HttpPost("{sessionId}/SaveAnswer")]
-    public GameSession SaveAnswer(Guid sessionId, int questionId, int answerId)
+    public GameSessionResponse SaveAnswer(Guid sessionId, int questionId, int answerId)
     {
         var session = new GameSession(sessionId);
 
@@ -48,49 +103,49 @@ public class GameSessionController : ControllerBase
             13 => GameStage.UnableToSuggest,
             _ => GameStage.InProgress
         };
-        
-        if(session.GameStage == GameStage.Suggesting)
+
+        if (session.GameStage == GameStage.Suggesting)
         {
             session.Solution = "COBOL on Wheelchair";
         }
 
-        return session;
+        return _mapper.Map<GameSessionResponse>(session);
     }
 
     [HttpGet("{sessionId}/NextQuestion")]
     [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
-    public Question NextQuestion(Guid sessionId)
+    public QuestionResponse NextQuestion(Guid sessionId)
     {
-        var question = new Question
+        var question = new QuestionResponse()
         {
             Id = _random.Next(100),
             Text =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            Answers = new List<Answer>()
+            AnswerOptions = new List<QuestionResponse.AnswerOption>()
             {
                 new()
                 {
-                    Id = _random.Next(20),
+                    AnswerId = _random.Next(20),
                     Text = "Yes"
                 },
                 new()
                 {
-                    Id = _random.Next(20),
+                    AnswerId = _random.Next(20),
                     Text = "No"
                 },
                 new()
                 {
-                    Id = _random.Next(20),
+                    AnswerId = _random.Next(20),
                     Text = "I don't know"
                 },
                 new()
                 {
-                    Id = _random.Next(20),
+                    AnswerId = _random.Next(20),
                     Text = "Probably"
                 },
                 new()
                 {
-                    Id = _random.Next(20),
+                    AnswerId = _random.Next(20),
                     Text = "Probably not"
                 },
             }
@@ -99,21 +154,21 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPost("{sessionId}/AcceptSolution")]
-    public GameSession AcceptSolution(Guid sessionId)
+    public GameSessionResponse AcceptSolution(Guid sessionId)
     {
         var session = new GameSession();
         session.GameStage = GameStage.Completed;
 
-        return session;
+        return _mapper.Map<GameSessionResponse>(session);
     }
 
     [HttpPost("{sessionId}/SuggestSolution")]
-    public GameSession SuggestSolution(Guid sessionId, [Required] string solution)
+    public GameSessionResponse SuggestSolution(Guid sessionId, [Required] string solution)
     {
         var session = new GameSession(sessionId);
         session.Solution = solution;
         session.GameStage = GameStage.ResolvePending;
 
-        return session;
+        return _mapper.Map<GameSessionResponse>(session);
     }
 }

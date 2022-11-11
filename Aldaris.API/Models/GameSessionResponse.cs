@@ -1,6 +1,6 @@
 namespace Aldaris.API.Domain;
 
-public class GameSession
+public class GameSessionResponse
 {
     public Guid Id { get; set; }
 
@@ -11,20 +11,15 @@ public class GameSession
     public GameStage GameStage { get; set; }
 
     public string? Solution { get; set; }
-    
-    public ICollection<Question> Questions { get; set; }
-    public ICollection<Answer> Answers { get; set; }
-    public List<GameSessionAnswer> GameSessionAnswers { get; set; }
-    
-    
-    public GameSession()
+
+    public GameSessionResponse()
     {
         Id = Guid.NewGuid();
         GameStage = GameStage.NewGame;
         CreatedAt = DateTime.Now;
     }
-    
-    public GameSession(Guid id)
+
+    public GameSessionResponse(Guid id)
     {
         Id = id;
         GameStage = GameStage.NewGame;

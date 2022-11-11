@@ -6,5 +6,6 @@ public class Question
 
     public string? Text { get; set; }
 
-    public IList<Answer> Answers { get; set; } = new List<Answer>();
+    public ICollection<Answer> PossibleAnswers { get; set; }
+    public List<QuestionPossibleAnswer> QuestionPossibleAnswers { get; set; }
 }

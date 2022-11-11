@@ -8,8 +8,7 @@ public class AldarisMapperConfiguration : Profile
     public AldarisMapperConfiguration()
     {
         CreateMap<GameSession, GameSessionResponse>();
+        CreateMap<Question, QuestionResponse>();
+        CreateMap<Answer, QuestionResponse.AnswerOption>();
     }
-
-    
-    
 }

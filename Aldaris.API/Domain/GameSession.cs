@@ -17,16 +17,9 @@ public class GameSession
     public List<GameSessionAnswer> GameSessionAnswers { get; set; }
     
     
-    public GameSession()
+    public GameSession(string userName)
     {
-        Id = Guid.NewGuid();
-        GameStage = GameStage.NewGame;
-        CreatedAt = DateTime.Now;
-    }
-    
-    public GameSession(Guid id)
-    {
-        Id = id;
+        UserName = userName;
         GameStage = GameStage.NewGame;
         CreatedAt = DateTime.Now;
     }

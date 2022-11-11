@@ -8,4 +8,7 @@ public class Question
 
     public ICollection<Answer> PossibleAnswers { get; set; }
     public List<QuestionPossibleAnswer> QuestionPossibleAnswers { get; set; }
+    
+    public ICollection<GameSession> GameSessions { get; set; }
+    public List<GameSessionAnswer> GameSessionAnswers { get; set; }
 }

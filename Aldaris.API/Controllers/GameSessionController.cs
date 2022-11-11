@@ -13,12 +13,12 @@ public class GameSessionController : ControllerBase
 {
     private readonly ILogger<GameSessionController> _logger;
     private readonly Random _random;
-    private readonly Mapper _mapper;
+    private readonly IMapper _mapper;
     private readonly AldarisContext _context;
 
     public GameSessionController(
         ILogger<GameSessionController> logger,
-        Mapper mapper,
+        IMapper mapper,
         AldarisContext context
     )
     {
@@ -34,7 +34,7 @@ public class GameSessionController : ControllerBase
         var session = new GameSession(userName);
         _context.GameSessions.Add(session);
         _context.SaveChanges();
-        
+
         var response = _mapper.Map<GameSessionResponse>(session);
         return response;
     }
@@ -88,14 +88,15 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPost("{sessionId}/SaveAnswer")]
-    public ActionResult<GameSessionResponse> SaveAnswer(Guid sessionId, int questionId, int answerId, GameStage? forceGameSessionStage = null)
+    public ActionResult<GameSessionResponse> SaveAnswer(Guid sessionId, int questionId, int answerId,
+        GameStage? forceGameSessionStage = null)
     {
         var session = _context.GameSessions
             .Include(s => s.GameSessionAnswers)
             .ThenInclude(s => s.Question)
             .ThenInclude(q => q.PossibleAnswers)
             .FirstOrDefault(s => s.Id == sessionId);
-        
+
         if (session == null)
         {
             return NotFound();
@@ -109,21 +110,15 @@ public class GameSessionController : ControllerBase
         }
         else
         {
-            session.GameSessionAnswers.Add(new GameSessionAnswer
-            {
-                QuestionId = questionId,
-                AskedAt = DateTime.Now,
-                AnswerId = answerId,
-                AnsweredAt = DateTime.Now
-            });
+            return BadRequest();
         }
-        
+
         //To be replaced after debugging
         if (forceGameSessionStage != null)
         {
             session.GameStage = forceGameSessionStage.Value;
         }
-        
+
         if (session.GameStage == GameStage.Suggesting)
         {
             session.Solution = "COBOL on Wheelchair";
@@ -141,6 +136,7 @@ public class GameSessionController : ControllerBase
         var session = _context.GameSessions
             .Include(s => s.GameSessionAnswers)
             .ThenInclude(s => s.Question)
+            .ThenInclude(q => q.PossibleAnswers)
             .FirstOrDefault(s => s.Id == sessionId);
 
         if (session == null)
@@ -148,15 +144,35 @@ public class GameSessionController : ControllerBase
             return NotFound();
         }
 
-        //To be replaced after debugging
-        var question = _context.Questions.OrderBy(r => Guid.NewGuid()).First();
-        
-        //ASSIGN QUESTION TO CURRENT SESSION
-        
+        var question = session.GameSessionAnswers.SingleOrDefault(sq => sq.AnswerId == null)?.Question;
+        if (question == null)
+        {
+            var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
+
+            question = _context.Questions
+                .Include(q => q.PossibleAnswers)
+                .Where(q => !userQuestionIds.Contains(q.Id))
+                .OrderBy(q => Guid.NewGuid())
+                .FirstOrDefault();
+
+            if (question == null)
+                return BadRequest();
+
+            session.GameSessionAnswers.Add(new GameSessionAnswer
+            {
+                QuestionId = question.Id,
+                AnsweredAt = DateTime.Now
+            });
+
+            session.GameStage = GameStage.InProgress;
+            
+            _context.SaveChanges();
+        }
+
         var questionResponse = _mapper.Map<QuestionResponse>(question);
         questionResponse.AnswerOptions =
             question.PossibleAnswers.Select(_mapper.Map<QuestionResponse.AnswerOption>).ToArray();
-        
+
         return questionResponse;
     }
 

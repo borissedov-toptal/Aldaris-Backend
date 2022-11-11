@@ -16,7 +16,7 @@ public class QuestionResponse
 
     public class AnswerOption
     {
-        public int AnswerId { get; set; }
+        public int Id { get; set; }
         public string? Text { get; set; }
     }
 }

@@ -29,7 +29,6 @@ public class AldarisContext : DbContext
                     .HasForeignKey(pt => pt.GameSessionId),
                 j =>
                 {
-                    j.Property(pt => pt.AskedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
                     j.HasKey(t => new { t.GameSessionId, t.QuestionId });
                 });
 

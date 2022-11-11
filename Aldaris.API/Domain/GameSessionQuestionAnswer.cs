@@ -16,7 +16,7 @@ public class GameSessionAnswer
 
     public int? AnswerId { get; set; }
 
-    public Answer Answer { get; set; }
+    public Answer? Answer { get; set; }
     
     public DateTime? AnsweredAt { get; set; }
 

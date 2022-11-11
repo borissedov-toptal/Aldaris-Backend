@@ -1,61 +1,82 @@
+using Aldaris.API.Domain;
+
 namespace Aldaris.API.Data;
 
 public static class DbInitializer
 {
     public static void Initialize(AldarisContext context)
     {
-        // // Look for any students.
-        // if (context.Students.Any())
-        // {
-        //     return;   // DB has been seeded
-        // }
+        // Look for any students.
+        if (context.Questions.Any())
+        {
+            return; // DB has been seeded
+        }
+
         //
-        // var students = new Student[]
+        // var answers = new Answer[]
         // {
-        //     new Student{FirstMidName="Carson",LastName="Alexander",EnrollmentDate=DateTime.Parse("2019-09-01")},
-        //     new Student{FirstMidName="Meredith",LastName="Alonso",EnrollmentDate=DateTime.Parse("2017-09-01")},
-        //     new Student{FirstMidName="Arturo",LastName="Anand",EnrollmentDate=DateTime.Parse("2018-09-01")},
-        //     new Student{FirstMidName="Gytis",LastName="Barzdukas",EnrollmentDate=DateTime.Parse("2017-09-01")},
-        //     new Student{FirstMidName="Yan",LastName="Li",EnrollmentDate=DateTime.Parse("2017-09-01")},
-        //     new Student{FirstMidName="Peggy",LastName="Justice",EnrollmentDate=DateTime.Parse("2016-09-01")},
-        //     new Student{FirstMidName="Laura",LastName="Norman",EnrollmentDate=DateTime.Parse("2018-09-01")},
-        //     new Student{FirstMidName="Nino",LastName="Olivetto",EnrollmentDate=DateTime.Parse("2019-09-01")}
+        //     new Answer { Text = "Sir Lancelot of Camelot." },
+        //     new Answer { Text = "Sir Robin of Camelot." },
+        //     new Answer { Text = "Sir Galahad of Camelot." },
+        //     new Answer { Text = "It is 'Arthur', King of the Britons." },
+        //     new Answer { Text = "To seek the Holy Grail." },
+        //     new Answer { Text = "Blue." },
+        //     new Answer { Text = "Blue. No, yel-- auuuuuuuugh!" },
+        //     new Answer { Text = "I don't know that! Auuuuuuuugh!" },
+        //     new Answer { Text = "What do you mean? An African or European swallow?" }
         // };
         //
-        // context.Students.AddRange(students);
+        // context.Answers.AddRange(answers);
         // context.SaveChanges();
-        //
-        // var courses = new Course[]
-        // {
-        //     new Course{CourseID=1050,Title="Chemistry",Credits=3},
-        //     new Course{CourseID=4022,Title="Microeconomics",Credits=3},
-        //     new Course{CourseID=4041,Title="Macroeconomics",Credits=3},
-        //     new Course{CourseID=1045,Title="Calculus",Credits=4},
-        //     new Course{CourseID=3141,Title="Trigonometry",Credits=4},
-        //     new Course{CourseID=2021,Title="Composition",Credits=3},
-        //     new Course{CourseID=2042,Title="Literature",Credits=4}
-        // };
-        //
-        // context.Courses.AddRange(courses);
-        // context.SaveChanges();
-        //
-        // var enrollments = new Enrollment[]
-        // {
-        //     new Enrollment{StudentID=1,CourseID=1050,Grade=Grade.A},
-        //     new Enrollment{StudentID=1,CourseID=4022,Grade=Grade.C},
-        //     new Enrollment{StudentID=1,CourseID=4041,Grade=Grade.B},
-        //     new Enrollment{StudentID=2,CourseID=1045,Grade=Grade.B},
-        //     new Enrollment{StudentID=2,CourseID=3141,Grade=Grade.F},
-        //     new Enrollment{StudentID=2,CourseID=2021,Grade=Grade.F},
-        //     new Enrollment{StudentID=3,CourseID=1050},
-        //     new Enrollment{StudentID=4,CourseID=1050},
-        //     new Enrollment{StudentID=4,CourseID=4022,Grade=Grade.F},
-        //     new Enrollment{StudentID=5,CourseID=4041,Grade=Grade.C},
-        //     new Enrollment{StudentID=6,CourseID=1045},
-        //     new Enrollment{StudentID=7,CourseID=3141,Grade=Grade.A},
-        // };
-        //
-        // context.Enrollments.AddRange(enrollments);
-        // context.SaveChanges();
+
+
+        var questions = new Question[]
+        {
+            new Question
+            {
+                Text = "What... is your name?", PossibleAnswers = new Answer[]
+                {
+                    new Answer { Text = "Sir Lancelot of Camelot." },
+                    new Answer { Text = "Sir Robin of Camelot." },
+                    new Answer { Text = "Sir Galahad of Camelot." },
+                    new Answer { Text = "It is 'Arthur', King of the Britons." },
+                }
+            },
+            new Question
+            {
+                Text = "What... is your quest?", PossibleAnswers = new Answer[]
+                {
+                    new Answer { Text = "To seek the Holy Grail." },
+                    new Answer { Text = "I seek the Grail." },
+                }
+            },
+            new Question
+            {
+                Text = "What... is your favourite color?", PossibleAnswers = new Answer[]
+                {
+                    new Answer { Text = "Blue." },
+                    new Answer { Text = "Blue. No, yel-- auuuuuuuugh!" },
+                }
+            },
+            new Question
+            {
+                Text = "What... is a capital of Assyria?", PossibleAnswers = new Answer[]
+                {
+                    new Answer { Text = "I don't know that! Auuuuuuuugh!" },
+                }
+            },
+            new Question
+            {
+                Text = "What... is the air-speed velocity of an unladen swallow?", PossibleAnswers = new Answer[]
+                {
+                    new Answer { Text = "What do you mean? An African or European swallow?" }
+                }
+            }
+        };
+
+        context.Questions.AddRange(questions);
+        context.SaveChanges();
+
+        context.SaveChanges();
     }
 }

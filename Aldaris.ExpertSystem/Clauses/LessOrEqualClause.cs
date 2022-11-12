@@ -26,10 +26,10 @@
                     //unmatched: b > a
                     if (b <= a)
                     {
-                        return IntersectionType.INCLUDE;
+                        return IntersectionType.Include;
                     }
 
-                    return IntersectionType.UNKNOWN;
+                    return IntersectionType.Unknown;
                 }
 
                 if (rhs is LessClause)
@@ -40,10 +40,10 @@
                     //unmatched: b > a
                     if (b <= a)
                     {
-                        return IntersectionType.INCLUDE;
+                        return IntersectionType.Include;
                     }
 
-                    return IntersectionType.UNKNOWN;
+                    return IntersectionType.Unknown;
                 }
                 if (rhs is IsClause)
                 {
@@ -53,10 +53,10 @@
                     //mutually exclusive: b > a
                     if (b <= a)
                     {
-                        return IntersectionType.INCLUDE;
+                        return IntersectionType.Include;
                     }
 
-                    return IntersectionType.MUTUALLY_EXCLUDE;
+                    return IntersectionType.MutuallyExclude;
                 }
                 if (rhs is GreaterOrEqualClause)
                 {
@@ -66,10 +66,10 @@
                     //unmatched: b <= a
                     if (b > a)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.UNKNOWN;
+                    return IntersectionType.Unknown;
                 }
                 if (rhs is GreaterClause)
                 {
@@ -79,15 +79,15 @@
                     //unmatched: b < a
                     if (b >= a)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.UNKNOWN;
+                    return IntersectionType.Unknown;
                 }
-                return IntersectionType.UNKNOWN;
+                return IntersectionType.Unknown;
             }
 
-            return IntersectionType.UNKNOWN;
+            return IntersectionType.Unknown;
         }
     }
 }

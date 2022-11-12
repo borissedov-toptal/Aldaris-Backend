@@ -14,35 +14,13 @@ public class WorkingMemory
     
     public bool IsFact(BaseClause c)
     {
-        return _facts.Any(f => f.MatchClause(c) == IntersectionType.INCLUDE) 
-               && _facts.All(f => f.MatchClause(c) != IntersectionType.MUTUALLY_EXCLUDE);
-        
-        // foreach (BaseClause fact in _facts)
-        // {
-        //     if (fact.MatchClause(c) == IntersectionType.INCLUDE)
-        //     {
-        //         return true;
-        //     }
-        //     if (fact.MatchClause(c) == IntersectionType.MUTUALLY_EXCLUDE)
-        //     {
-        //         return false;
-        //     }
-        // }
-        //
-        // return false;
+        return _facts.Any(f => f.MatchClause(c) == IntersectionType.Include) 
+               && _facts.All(f => f.MatchClause(c) != IntersectionType.MutuallyExclude);
     }
 
     public bool IsNotFact(BaseClause c)
     {
-        foreach (BaseClause fact in _facts)
-        {
-            if (fact.MatchClause(c) == IntersectionType.MUTUALLY_EXCLUDE)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return _facts.Any(fact => fact.MatchClause(c) == IntersectionType.MutuallyExclude);
     }
 
     public void ClearFacts()

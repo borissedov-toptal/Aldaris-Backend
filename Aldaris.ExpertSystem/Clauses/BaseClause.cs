@@ -27,7 +27,7 @@ public abstract class BaseClause
     {
         if (_variable != rhs.Variable)
         {
-            return IntersectionType.UNKNOWN;
+            return IntersectionType.Unknown;
         }
 
         return Intersect(rhs);

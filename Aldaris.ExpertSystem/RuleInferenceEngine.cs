@@ -22,30 +22,34 @@ public class RuleInferenceEngine
     }
 
     //forward chain
-    public void Infer()
+    public void InferForward()
     {
-        List<Rule> cs;
+        List<Rule> matchedRules;
         do
         {
-            cs = GetMatchedRules();
-            if (cs.Count > 0)
+            matchedRules = GetMatchedRules();
+            if (matchedRules.Count > 0)
             {
-                if (!FireRule(cs))
+                if (!FireRule(matchedRules))
                 {
                     break;
                 }
             }
-        } while (cs.Count > 0);
+        } while (matchedRules.Count > 0);
     }
-
-    //backward chain
-    public BaseClause? Infer(string goalVariable, List<BaseClause> unprovedConditions)
+    
+    /// <summary>
+    /// Backward chain
+    /// </summary>
+    /// <param name="unprovedConditions"></param>
+    /// <returns>Conclusion</returns>
+    public BaseClause? InferBackward(List<BaseClause> unprovedConditions)
     {
         BaseClause? conclusion = null;
 
         foreach (Rule rule in _rules)
         {
-            rule.FirstAntecedent();
+            rule.ResetAntecedentIterator();
             bool goalReached = true;
             while (rule.HasNextAntecedents())
             {
@@ -90,15 +94,15 @@ public class RuleInferenceEngine
 
     private bool IsFact(BaseClause goal, List<BaseClause> unprovedConditions)
     {
-        var goalStack = new List<Rule>();
+        var goalStack = new Stack<Rule>();
 
         foreach (Rule rule in _rules)
         {
             BaseClause consequent = rule.Consequent;
             IntersectionType it = consequent.MatchClause(goal);
-            if (it == IntersectionType.INCLUDE)
+            if (it == IntersectionType.Include)
             {
-                goalStack.Add(rule);
+                goalStack.Push(rule);
             }
         }
 
@@ -108,9 +112,9 @@ public class RuleInferenceEngine
         }
         else
         {
-            foreach (Rule rule in goalStack)
+            while (goalStack.TryPop(out var rule))
             {
-                rule.FirstAntecedent();
+                rule.ResetAntecedentIterator();
                 bool goalReached = true;
                 while (rule.HasNextAntecedents())
                 {
@@ -138,8 +142,48 @@ public class RuleInferenceEngine
                 {
                     return true;
                 }
-            }
+            } 
         }
+        
+        //
+        // if (goalStack.Count == 0)
+        // {
+        //     unprovedConditions.Add(goal);
+        // }
+        // else
+        // {
+        //     foreach (Rule rule in goalStack)
+        //     {
+        //         rule.FirstAntecedent();
+        //         bool goalReached = true;
+        //         while (rule.HasNextAntecedents())
+        //         {
+        //             BaseClause antecedent = rule.NextAntecedent();
+        //             if (!_workingMemory.IsFact(antecedent))
+        //             {
+        //                 if (_workingMemory.IsNotFact(antecedent))
+        //                 {
+        //                     goalReached = false;
+        //                     break;
+        //                 }
+        //                 if (IsFact(antecedent, unprovedConditions))
+        //                 {
+        //                     _workingMemory.AddFact(antecedent);
+        //                 }
+        //                 else
+        //                 {
+        //                     goalReached = false;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //
+        //         if (goalReached)
+        //         {
+        //             return true;
+        //         }
+        //     }
+        // }
 
         return false;
     }

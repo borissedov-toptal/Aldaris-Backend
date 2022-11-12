@@ -73,7 +73,7 @@ public class RuleInferenceEngineVehiclesTests
 
         List<BaseClause> unprovedConditions = new ();
 
-        BaseClause? conclusion = _engine.Infer("vehicle", unprovedConditions);
+        BaseClause? conclusion = _engine.InferBackward(unprovedConditions);
 
         Console.WriteLine("Conclusion: " + conclusion);
 
@@ -93,7 +93,7 @@ public class RuleInferenceEngineVehiclesTests
         Console.WriteLine("{0}", _engine.Facts);
         Console.WriteLine("");
 
-        _engine.Infer(); //forward chain
+        _engine.InferForward(); //forward chain
 
         Console.WriteLine("after inference");
         Console.WriteLine("{0}", _engine.Facts);

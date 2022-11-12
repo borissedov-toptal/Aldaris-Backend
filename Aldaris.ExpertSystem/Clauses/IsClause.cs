@@ -14,10 +14,10 @@
             {
                 if (Value == rhs.Value)
                 {
-                    return IntersectionType.INCLUDE;
+                    return IntersectionType.Include;
                 }
 
-                return IntersectionType.MUTUALLY_EXCLUDE;
+                return IntersectionType.MutuallyExclude;
             }
 
             string v1 = Value;
@@ -32,43 +32,43 @@
                 {
                     if (a >= b)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.INCLUDE;
+                    return IntersectionType.Include;
                 }
 
                 if (rhs is LessOrEqualClause)
                 {
                     if (a > b)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.INCLUDE;
+                    return IntersectionType.Include;
                 }
                 if (rhs is GreaterClause)
                 {
                     if (a <= b)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.INCLUDE;
+                    return IntersectionType.Include;
                 }
                 if (rhs is GreaterOrEqualClause)
                 {
                     if (a < b)
                     {
-                        return IntersectionType.MUTUALLY_EXCLUDE;
+                        return IntersectionType.MutuallyExclude;
                     }
 
-                    return IntersectionType.INCLUDE;
+                    return IntersectionType.Include;
                 }
-                return IntersectionType.UNKNOWN;
+                return IntersectionType.Unknown;
             }
 
-            return IntersectionType.UNKNOWN;
+            return IntersectionType.Unknown;
         }
     }
 }

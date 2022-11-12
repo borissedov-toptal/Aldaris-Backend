@@ -16,7 +16,7 @@ public class Rule
         Consequent = consequent;
     }
 
-    public void FirstAntecedent()
+    public void ResetAntecedentIterator()
     {
         _index = 0;
     }
@@ -51,6 +51,10 @@ public class Rule
     }
 
 
+    /// <summary>
+    /// Checks if Rule's Consequent IsFact for a WorkingMemory and in case of yes saves it into WM
+    /// </summary>
+    /// <param name="workingMemory"></param>
     public void Fire(WorkingMemory workingMemory)
     {
         if (!workingMemory.IsFact(Consequent))
@@ -61,11 +65,18 @@ public class Rule
         _fired = true;
     }
 
-    public bool IsTriggered(WorkingMemory wm)
+    /// <summary>
+    /// Checks if All Rule's Antecedents are Facts for a WorkingMemory
+    /// </summary>
+    /// <param name="workingMemory"></param>
+    /// <returns></returns>
+    public bool IsTriggered(WorkingMemory workingMemory)
     {
+        // return _antecedents.All(workingMemory.IsFact);
+        
         foreach (BaseClause antecedent in _antecedents)
         {
-            if (!wm.IsFact(antecedent))
+            if (!workingMemory.IsFact(antecedent))
             {
                 return false;
             }

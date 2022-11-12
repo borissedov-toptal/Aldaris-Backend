@@ -59,7 +59,7 @@ public class RuleInferenceEngineTests
         _engine.AddRule(rule);
 
         rule = new Rule("COBOL", new IsClause("programming_language", "COBOL"));
-        rule.AddAntecedent(new LessClause("release_year", "1959"));
+        rule.AddAntecedent(new IsClause("release_year", "1959"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         _engine.AddRule(rule);
 
@@ -79,35 +79,46 @@ public class RuleInferenceEngineTests
         _engine.AddFact(new GreaterOrEqualClause("release_year", "2005"));
         _engine.AddFact(new IsClause("implements_oop", "yes"));
         _engine.AddFact(new IsClause("uses_virtual_machine", "no"));
-
-        Console.WriteLine("Infer: vehicle");
-
+        
         List<BaseClause> unprovedConditions = new ();
 
-        BaseClause? conclusion = _engine.Infer("programming_language", unprovedConditions);
+        BaseClause? conclusion = _engine.InferBackward(unprovedConditions);
 
         Console.WriteLine("Conclusion: " + conclusion);
 
         Assert.NotNull(conclusion);
         Assert.That(conclusion!.Value, Is.EqualTo("Go"));
     }
+    
+    [Test]
+    public void TestBackwardChainForSingleFact()
+    {
+        _engine.AddFact(new IsClause("release_year", "1959"));
+
+        _engine.InferForward();
+
+        var unprovedConditions = new List<BaseClause>();
+        var conclusion= _engine.InferBackward(unprovedConditions); //forward chain
+
+        Assert.NotNull(conclusion);
+        Assert.That(conclusion!.Value, Is.EqualTo("COBOL"));
+    }
 
     [Test]
     public void TestForwardChain()
     {
-        _engine.AddFact(new IsClause("uses_virtual_machine", "no"));
-        _engine.AddFact(new IsClause("implements_oop", "yes"));
+        _engine.AddFact(new IsClause("release_year", "1959"));
 
         Console.WriteLine("before inference");
         Console.WriteLine("{0}", _engine.Facts);
         Console.WriteLine("");
 
-        _engine.Infer(); //forward chain
+        _engine.InferForward(); //forward chain
 
         Console.WriteLine("after inference");
         Console.WriteLine("{0}", _engine.Facts);
         Console.WriteLine("");
 
-        Assert.That(_engine.Facts.Count, Is.EqualTo(6));
+        Assert.That(_engine.Facts.Count, Is.EqualTo(3));
     }
 }

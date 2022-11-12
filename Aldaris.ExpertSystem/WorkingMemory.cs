@@ -29,25 +29,9 @@ public class WorkingMemory
     }
 
 
-    public override string ToString()
+    public override string ToString() 
     {
-        var message = new StringBuilder();
-
-        bool firstClause = true;
-        foreach (BaseClause cc in _facts)
-        {
-            if (firstClause)
-            {
-                message.Append(cc);
-                firstClause = false;
-            }
-            else
-            {
-                message.Append("\n" + cc);
-            }
-        }
-
-        return message.ToString();
+        return String.Join(Environment.NewLine, _facts);
     }
 
     public int Count => _facts.Count;

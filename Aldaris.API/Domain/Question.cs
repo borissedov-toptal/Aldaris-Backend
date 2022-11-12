@@ -19,5 +19,4 @@ public class Question
     public List<GameSessionAnswer> GameSessionAnswers { get; set; } = new();
 
     public string VariableName { get; set; }
-
 }

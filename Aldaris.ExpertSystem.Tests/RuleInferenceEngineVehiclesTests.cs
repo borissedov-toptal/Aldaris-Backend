@@ -9,53 +9,53 @@ public class RuleInferenceEngineVehiclesTests
     {
         _engine = new RuleInferenceEngine();
 
-        Rule rule = new Rule("Bicycle", new IsClause("vehicle", "Bicycle"));
+        Rule rule = new Rule(new IsClause("vehicle", "Bicycle"));
         rule.AddAntecedent(new IsClause("vehicleType", "cycle"));
         rule.AddAntecedent(new IsClause("num_wheels", "2"));
         rule.AddAntecedent(new IsClause("motor", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Tricycle",new IsClause("vehicle", "Tricycle"));
+        rule = new Rule(new IsClause("vehicle", "Tricycle"));
         rule.AddAntecedent(new IsClause("vehicleType", "cycle"));
         rule.AddAntecedent(new IsClause("num_wheels", "3"));
         rule.AddAntecedent(new IsClause("motor", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Motorcycle",new IsClause("vehicle", "Motorcycle"));
+        rule = new Rule(new IsClause("vehicle", "Motorcycle"));
         rule.AddAntecedent(new IsClause("vehicleType", "cycle"));
         rule.AddAntecedent(new IsClause("num_wheels", "2"));
         rule.AddAntecedent(new IsClause("motor", "yes"));
         _engine.AddRule(rule);
 
-        rule = new Rule("SportsCar", new IsClause("vehicle", "Sports_Car"));
+        rule = new Rule(new IsClause("vehicle", "Sports_Car"));
         rule.AddAntecedent(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("size", "medium"));
         rule.AddAntecedent(new IsClause("num_doors", "2"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Sedan", new IsClause("vehicle", "Sedan"));
+        rule = new Rule(new IsClause("vehicle", "Sedan"));
         rule.AddAntecedent(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("size", "medium"));
         rule.AddAntecedent(new IsClause("num_doors", "4"));
         _engine.AddRule(rule);
 
-        rule = new Rule("MiniVan", new IsClause("vehicle", "MiniVan"));
+        rule = new Rule(new IsClause("vehicle", "MiniVan"));
         rule.AddAntecedent(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("size", "medium"));
         rule.AddAntecedent(new IsClause("num_doors", "3"));
         _engine.AddRule(rule);
 
-        rule = new Rule("SUV", new IsClause("vehicle", "SUV"));
+        rule = new Rule(new IsClause("vehicle", "SUV"));
         rule.AddAntecedent(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("size", "large"));
         rule.AddAntecedent(new IsClause("num_doors", "4"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Cycle", new IsClause("vehicleType", "cycle"));
+        rule = new Rule(new IsClause("vehicleType", "cycle"));
         rule.AddAntecedent(new LessClause("num_wheels", "4"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Automobile", new IsClause("vehicleType", "automobile"));
+        rule = new Rule(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("num_wheels", "4"));
         rule.AddAntecedent(new IsClause("motor", "yes"));
         _engine.AddRule(rule);

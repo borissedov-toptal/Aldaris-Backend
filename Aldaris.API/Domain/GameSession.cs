@@ -14,7 +14,7 @@ public class GameSession
 
     public ICollection<Question> Questions { get; set; } = new List<Question>();
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
-    public List<GameSessionAnswer> GameSessionAnswers { get; set; }
+    public List<GameSessionAnswer> GameSessionAnswers { get; set; } = new();
     
     
     public GameSession(string userName)

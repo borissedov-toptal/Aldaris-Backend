@@ -1,4 +1,5 @@
 using Aldaris.API.Domain;
+using Aldaris.ExpertSystem.Clauses;
 
 namespace Aldaris.API.Data;
 
@@ -36,40 +37,40 @@ public static class DbInitializer
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("Sir Lancelot of Camelot."),
-                    new("Sir Robin of Camelot." ),
-                    new("Sir Galahad of Camelot." ),
-                    new("It is 'Arthur', King of the Britons." ),
+                    new("Sir Lancelot of Camelot.", nameof(IsClause), "Lancelot"),
+                    new("Sir Robin of Camelot." , nameof(IsClause), "Robin"),
+                    new("Sir Galahad of Camelot." , nameof(IsClause), "Galahad"),
+                    new("It is 'Arthur', King of the Britons." , nameof(IsClause), "Arthur"),
                 }
             },
             new ("What... is your quest?", "quest")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("To seek the Holy Grail." ),
-                    new("I seek the Grail." )
+                    new("To seek the Holy Grail." , nameof(IsClause), "Seek the Grail"),
+                    new("I seek the Grail." , nameof(IsClause), "Seek the Grail")
                 }
             },
             new ("What... is your favourite color?", "favouriteColor")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("Blue." ),
-                    new("Blue. No, yel-- auuuuuuuugh!" )
+                    new("Blue." , nameof(IsClause), "Blue"),
+                    new("Blue. No, yel-- auuuuuuuugh!", nameof(IsClause), "Blue" )
                 }
             },
             new("What... is a capital of Assyria?", "capitalOfAssyria")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("I don't know that! Auuuuuuuugh!")
+                    new("I don't know that! Auuuuuuuugh!", nameof(IsClause), String.Empty)
                 }
             },
             new( "What... is the air-speed velocity of an unladen swallow?", "swallowSpeed")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("What do you mean? An African or European swallow?" )
+                    new("What do you mean? An African or European swallow?" , nameof(IsClause), String.Empty)
                 }
             }
         };

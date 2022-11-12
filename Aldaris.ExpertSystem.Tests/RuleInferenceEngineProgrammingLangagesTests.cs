@@ -9,42 +9,42 @@ public class RuleInferenceEngineProgrammingLangagesTests
     {
         _engine = new RuleInferenceEngine();
 
-        Rule rule = new Rule("C#", new IsClause("programming_language", "C#"));
+        Rule rule = new Rule(new IsClause("programming_language", "C#"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("release_year", "2000"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "yes"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Swift",new IsClause("programming_language", "Swift"));
+        rule = new Rule(new IsClause("programming_language", "Swift"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("release_year", "2014"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Python",new IsClause("programming_language", "Python"));
+        rule = new Rule(new IsClause("programming_language", "Python"));
         rule.AddAntecedent(new IsClause("compilation", "interpreted"));
         // rule.AddAntecedent(new IsClause("release_year", "1991"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Pascal", new IsClause("programming_language", "Pascal"));
+        rule = new Rule(new IsClause("programming_language", "Pascal"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("release_year", "1970"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         rule.AddAntecedent(new IsClause("implements_oop", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Java", new IsClause("programming_language", "Java"));
+        rule = new Rule(new IsClause("programming_language", "Java"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
         rule.AddAntecedent(new IsClause("release_year", "1995"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "yes"));
         _engine.AddRule(rule);
 
-        rule = new Rule("C++", new IsClause("programming_language", "C++"));
+        rule = new Rule(new IsClause("programming_language", "C++"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("vehicleType", "automobile"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
@@ -52,18 +52,18 @@ public class RuleInferenceEngineProgrammingLangagesTests
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Assembler", new IsClause("programming_language", "Assembler"));
+        rule = new Rule(new IsClause("programming_language", "Assembler"));
         rule.AddAntecedent(new IsClause("implements_oop", "no"));
         rule.AddAntecedent(new IsClause("release_year", "1947"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("COBOL", new IsClause("programming_language", "COBOL"));
+        rule = new Rule(new IsClause("programming_language", "COBOL"));
         rule.AddAntecedent(new IsClause("release_year", "1959"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         _engine.AddRule(rule);
 
-        rule = new Rule("Go", new IsClause("programming_language", "Go"));
+        rule = new Rule(new IsClause("programming_language", "Go"));
         rule.AddAntecedent(new IsClause("compilation", "compilable"));
         rule.AddAntecedent(new IsClause("release_year", "2009"));
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));

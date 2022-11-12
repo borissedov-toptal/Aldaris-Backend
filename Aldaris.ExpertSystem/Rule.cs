@@ -4,15 +4,13 @@ namespace Aldaris.ExpertSystem;
 
 public class Rule
 {
-    private readonly string _name;
     private readonly List<BaseClause> _antecedents = new();
 
     private bool _fired;
     private int _index;
 
-    public Rule(string name, BaseClause consequent)
+    public Rule(BaseClause consequent)
     {
-        _name = name;
         Consequent = consequent;
     }
 
@@ -33,11 +31,6 @@ public class Rule
         return c;
     }
 
-    public string GetName()
-    {
-        return _name;
-    }
-
     public void AddAntecedent(BaseClause antecedent)
     {
         _antecedents.Add(antecedent);
@@ -49,7 +42,6 @@ public class Rule
     {
         return _fired;
     }
-
 
     /// <summary>
     /// Checks if Rule's Consequent IsFact for a WorkingMemory and in case of yes saves it into WM

@@ -12,6 +12,8 @@ public class AldarisContext : DbContext
     public DbSet<GameSession> GameSessions { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<Answer> Answers { get; set; }
+    public DbSet<KnowledgeBaseRule> Rules { get; set; }
+    public DbSet<KnowledgeBaseFact> Facts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,6 +63,25 @@ public class AldarisContext : DbContext
                 j =>
                 {
                     j.HasKey(t => new { t.QuestionId, t.AnswerId });
+                });
+        
+        modelBuilder.Entity<KnowledgeBaseRule>()
+            .HasMany(p => p.Antecedents)
+            .WithMany()
+            .UsingEntity<KnowledgeBaseRuleAntecedent>(
+                j => j
+                    .HasOne(pt => pt.Antecedent)
+                    .WithMany()
+                    .HasForeignKey(pt => pt.AntecedentId)
+                    .OnDelete(DeleteBehavior.NoAction),
+                j => j
+                    .HasOne(pt => pt.Rule)
+                    .WithMany(p => p.KnowledgeBaseRuleAntecedents)
+                    .HasForeignKey(pt => pt.RuleId)
+                    .OnDelete(DeleteBehavior.NoAction),
+                j =>
+                {
+                    j.HasKey(t => new { t.RuleId, t.AntecedentId });
                 });
     }
 }

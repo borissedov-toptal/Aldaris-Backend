@@ -15,15 +15,15 @@ public static class DbInitializer
         //
         // var answers = new Answer[]
         // {
-        //     new Answer { Text = "Sir Lancelot of Camelot." },
-        //     new Answer { Text = "Sir Robin of Camelot." },
-        //     new Answer { Text = "Sir Galahad of Camelot." },
-        //     new Answer { Text = "It is 'Arthur', King of the Britons." },
-        //     new Answer { Text = "To seek the Holy Grail." },
-        //     new Answer { Text = "Blue." },
-        //     new Answer { Text = "Blue. No, yel-- auuuuuuuugh!" },
-        //     new Answer { Text = "I don't know that! Auuuuuuuugh!" },
-        //     new Answer { Text = "What do you mean? An African or European swallow?" }
+        //     new Answer("Sir Lancelot of Camelot." },
+        //     new Answer("Sir Robin of Camelot." },
+        //     new Answer("Sir Galahad of Camelot." },
+        //     new Answer("It is 'Arthur', King of the Britons." },
+        //     new Answer("To seek the Holy Grail." },
+        //     new Answer("Blue." },
+        //     new Answer("Blue. No, yel-- auuuuuuuugh!" },
+        //     new Answer("I don't know that! Auuuuuuuugh!" },
+        //     new Answer("What do you mean? An African or European swallow?" }
         // };
         //
         // context.Answers.AddRange(answers);
@@ -32,44 +32,44 @@ public static class DbInitializer
 
         var questions = new Question[]
         {
-            new Question
+            new( "What... is your name?", "name")
             {
-                Text = "What... is your name?", PossibleAnswers = new Answer[]
+                PossibleAnswers = new Answer[]
                 {
-                    new Answer { Text = "Sir Lancelot of Camelot." },
-                    new Answer { Text = "Sir Robin of Camelot." },
-                    new Answer { Text = "Sir Galahad of Camelot." },
-                    new Answer { Text = "It is 'Arthur', King of the Britons." },
+                    new("Sir Lancelot of Camelot."),
+                    new("Sir Robin of Camelot." ),
+                    new("Sir Galahad of Camelot." ),
+                    new("It is 'Arthur', King of the Britons." ),
                 }
             },
-            new Question
+            new ("What... is your quest?", "quest")
             {
-                Text = "What... is your quest?", PossibleAnswers = new Answer[]
+                PossibleAnswers = new Answer[]
                 {
-                    new Answer { Text = "To seek the Holy Grail." },
-                    new Answer { Text = "I seek the Grail." },
+                    new("To seek the Holy Grail." ),
+                    new("I seek the Grail." )
                 }
             },
-            new Question
+            new ("What... is your favourite color?", "favouriteColor")
             {
-                Text = "What... is your favourite color?", PossibleAnswers = new Answer[]
+                PossibleAnswers = new Answer[]
                 {
-                    new Answer { Text = "Blue." },
-                    new Answer { Text = "Blue. No, yel-- auuuuuuuugh!" },
+                    new("Blue." ),
+                    new("Blue. No, yel-- auuuuuuuugh!" )
                 }
             },
-            new Question
+            new("What... is a capital of Assyria?", "capitalOfAssyria")
             {
-                Text = "What... is a capital of Assyria?", PossibleAnswers = new Answer[]
+                PossibleAnswers = new Answer[]
                 {
-                    new Answer { Text = "I don't know that! Auuuuuuuugh!" },
+                    new("I don't know that! Auuuuuuuugh!")
                 }
             },
-            new Question
+            new( "What... is the air-speed velocity of an unladen swallow?", "swallowSpeed")
             {
-                Text = "What... is the air-speed velocity of an unladen swallow?", PossibleAnswers = new Answer[]
+                PossibleAnswers = new Answer[]
                 {
-                    new Answer { Text = "What do you mean? An African or European swallow?" }
+                    new("What do you mean? An African or European swallow?" )
                 }
             }
         };

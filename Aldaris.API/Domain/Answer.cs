@@ -2,6 +2,11 @@ namespace Aldaris.API.Domain;
 
 public class Answer
 {
+    public Answer(string text)
+    {
+        Text = text;
+    }
+
     public int Id { get; set; }
 
     public string Text { get; set; }

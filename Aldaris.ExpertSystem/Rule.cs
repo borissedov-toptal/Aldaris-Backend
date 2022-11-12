@@ -72,16 +72,6 @@ public class Rule
     /// <returns></returns>
     public bool IsTriggered(WorkingMemory workingMemory)
     {
-        // return _antecedents.All(workingMemory.IsFact);
-        
-        foreach (BaseClause antecedent in _antecedents)
-        {
-            if (!workingMemory.IsFact(antecedent))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return _antecedents.All(workingMemory.IsFact);
     }
 }

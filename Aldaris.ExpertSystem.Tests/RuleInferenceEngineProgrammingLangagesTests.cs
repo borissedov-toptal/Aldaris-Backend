@@ -1,6 +1,6 @@
 namespace Aldaris.ExpertSystem.Tests;
 
-public class RuleInferenceEngineTests
+public class RuleInferenceEngineProgrammingLangagesTests
 {
     private RuleInferenceEngine _engine;
 
@@ -100,25 +100,15 @@ public class RuleInferenceEngineTests
         var unprovedConditions = new List<BaseClause>();
         var conclusion= _engine.InferBackward(unprovedConditions); //forward chain
 
+        var simplifiedConditions = unprovedConditions.Simplify();
+
+        foreach (var clause in simplifiedConditions)
+        {
+            _engine.AddFact(clause);
+        }
+        conclusion = _engine.InferBackward(unprovedConditions); //forward chain
+
         Assert.NotNull(conclusion);
         Assert.That(conclusion!.Value, Is.EqualTo("COBOL"));
-    }
-
-    [Test]
-    public void TestForwardChain()
-    {
-        _engine.AddFact(new IsClause("release_year", "1959"));
-
-        Console.WriteLine("before inference");
-        Console.WriteLine("{0}", _engine.Facts);
-        Console.WriteLine("");
-
-        _engine.InferForward(); //forward chain
-
-        Console.WriteLine("after inference");
-        Console.WriteLine("{0}", _engine.Facts);
-        Console.WriteLine("");
-
-        Assert.That(_engine.Facts.Count, Is.EqualTo(3));
     }
 }

@@ -28,7 +28,6 @@ public class WorkingMemory
         _facts.Clear();
     }
 
-
     public override string ToString() 
     {
         return String.Join(Environment.NewLine, _facts);

@@ -4,23 +4,35 @@ namespace Aldaris.ExpertSystem;
 
 public class RuleInferenceEngine
 {
-    private readonly List<Rule> _rules = new();
+    private readonly List<Rule> _knowledgeBase = new();
     private readonly WorkingMemory _workingMemory = new();
-
-    public RuleInferenceEngine()
-    {
-    }
 
     public void AddRule(Rule rule)
     {
-        _rules.Add(rule);
+        _knowledgeBase.Add(rule);
     }
 
     public void ClearRules()
     {
-        _rules.Clear();
+        _knowledgeBase.Clear();
+    }
+    
+    public WorkingMemory Facts => _workingMemory;
+
+    /// <summary>
+    /// Add another know fact into the working memory
+    /// </summary>
+    /// <param name="c"></param>
+    public void AddFact(BaseClause c)
+    {
+        _workingMemory.AddFact(c);
     }
 
+    public void ClearFacts()
+    {
+        _workingMemory.ClearFacts();
+    }
+    
     //forward chain
     public void InferForward()
     {
@@ -47,7 +59,7 @@ public class RuleInferenceEngine
     {
         BaseClause? conclusion = null;
 
-        foreach (Rule rule in _rules)
+        foreach (Rule rule in _knowledgeBase)
         {
             rule.ResetAntecedentIterator();
             bool goalReached = true;
@@ -86,17 +98,14 @@ public class RuleInferenceEngine
 
         return conclusion;
     }
-
-    public void ClearFacts()
-    {
-        _workingMemory.ClearFacts();
-    }
+    
+    
 
     private bool IsFact(BaseClause goal, List<BaseClause> unprovedConditions)
     {
         var goalStack = new Stack<Rule>();
 
-        foreach (Rule rule in _rules)
+        foreach (Rule rule in _knowledgeBase)
         {
             BaseClause consequent = rule.Consequent;
             IntersectionType it = consequent.MatchClause(goal);
@@ -190,29 +199,19 @@ public class RuleInferenceEngine
 
     private bool FireRule(List<Rule> conflictingRules)
     {
-        bool hasRule2Fire = false;
+        bool hasRuleToFire = false;
         foreach (Rule rule in conflictingRules)
         {
             if (!rule.IsFired())
             {
-                hasRule2Fire = true;
+                hasRuleToFire = true;
                 rule.Fire(_workingMemory);
             }
         }
 
-        return hasRule2Fire;
+        return hasRuleToFire;
     }
 
-    /// <summary>
-    /// Add another know fact into the working memory
-    /// </summary>
-    /// <param name="c"></param>
-    public void AddFact(BaseClause c)
-    {
-        _workingMemory.AddFact(c);
-    }
-
-    public WorkingMemory Facts => _workingMemory;
 
     /// <summary>
     /// Method that return the set of rules whose antecedents match with the working memory
@@ -221,7 +220,7 @@ public class RuleInferenceEngine
     private List<Rule> GetMatchedRules()
     {
         List<Rule> cs = new List<Rule>();
-        foreach (Rule rule in _rules)
+        foreach (Rule rule in _knowledgeBase)
         {
             if (rule.IsTriggered(_workingMemory))
             {

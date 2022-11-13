@@ -88,8 +88,7 @@ public class GameSessionController : ControllerBase
     }
 
     [HttpPost("{sessionId}/SaveAnswer")]
-    public ActionResult<GameSessionResponse> SaveAnswer(Guid sessionId, int questionId, int answerId,
-        GameStage? forceGameSessionStage = null)
+    public ActionResult<GameSessionResponse> SaveAnswer(Guid sessionId, int questionId, int answerId)
     {
         var session = _context.GameSessions
             .Include(s => s.GameSessionAnswers)
@@ -114,18 +113,11 @@ public class GameSessionController : ControllerBase
         }
 
         //To be replaced after debugging
-        if (forceGameSessionStage != null)
-        {
-            session.GameStage = forceGameSessionStage.Value;
-        }
-        else
-        {
-            var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
+        var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
 
-            if (!_context.Questions.Any(q => !userQuestionIds.Contains(q.Id)))
-            {
-                session.GameStage = new[] { GameStage.Suggesting, GameStage.UnableToSuggest }[_random.Next(2)];
-            }
+        if (!_context.Questions.Any(q => !userQuestionIds.Contains(q.Id)))
+        {
+            session.GameStage = new[] { GameStage.Suggesting, GameStage.UnableToSuggest }[_random.Next(2)];
         }
 
         if (session.GameStage == GameStage.Suggesting)

@@ -34,7 +34,8 @@ public class LeaderBoardController : ControllerBase
                     true
                 )
             )
-            .OrderByDescending(x=>x.Score)
+            .ToArray()
+            .OrderByDescending(x => x.Score)
             .Take(count)
             .ToArray();
     }

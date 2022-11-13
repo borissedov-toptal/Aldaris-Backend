@@ -113,9 +113,8 @@ public class GameSessionController : ControllerBase
         }
 
         //To be replaced after debugging
-        var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
-
-        if (!_context.Questions.Any(q => !userQuestionIds.Contains(q.Id)))
+        var nextQuestion = GetNextQuestion(session);
+        if (nextQuestion == null)
         {
             session.GameStage = new[] { GameStage.Suggesting, GameStage.UnableToSuggest }[_random.Next(2)];
         }
@@ -148,13 +147,7 @@ public class GameSessionController : ControllerBase
         var question = session.GameSessionAnswers.SingleOrDefault(sq => sq.AnswerId == null)?.Question;
         if (question == null)
         {
-            var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
-
-            question = _context.Questions
-                .Include(q => q.PossibleAnswers)
-                .Where(q => !userQuestionIds.Contains(q.Id))
-                .OrderBy(q => Guid.NewGuid())
-                .FirstOrDefault();
+            question = GetNextQuestion(session);
 
             if (question == null)
                 return BadRequest();
@@ -176,6 +169,7 @@ public class GameSessionController : ControllerBase
 
         return questionResponse;
     }
+
 
     [HttpPost("{sessionId}/AcceptSolution")]
     public ActionResult<GameSessionResponse> AcceptSolution(Guid sessionId)
@@ -210,5 +204,18 @@ public class GameSessionController : ControllerBase
         _context.SaveChanges();
 
         return _mapper.Map<GameSessionResponse>(session);
+    }
+    
+    
+    private Question? GetNextQuestion(GameSession session)
+    {
+        var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
+
+        var question = _context.Questions
+            .Include(q => q.PossibleAnswers)
+            .Where(q => !userQuestionIds.Contains(q.Id))
+            .OrderBy(q => Guid.NewGuid())
+            .FirstOrDefault();
+        return question;
     }
 }

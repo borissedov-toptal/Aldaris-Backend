@@ -1,6 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Aldaris.API.Data;
 using Aldaris.API.Domain;
+using Aldaris.API.Infrastructure;
+using Aldaris.ExpertSystem.Clauses;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,16 +17,22 @@ public class GameSessionController : ControllerBase
     private readonly Random _random;
     private readonly IMapper _mapper;
     private readonly AldarisContext _context;
+    private readonly InferenceEngineFactory _inferenceEngineFactory;
+    private readonly ClauseParser _clauseParser;
 
     public GameSessionController(
         ILogger<GameSessionController> logger,
         IMapper mapper,
-        AldarisContext context
-    )
+        AldarisContext context,
+        InferenceEngineFactory inferenceEngineFactory, 
+        ClauseParser clauseParser
+        )
     {
         _logger = logger;
         _mapper = mapper;
         _context = context;
+        _inferenceEngineFactory = inferenceEngineFactory;
+        _clauseParser = clauseParser;
         _random = Random.Shared;
     }
 
@@ -101,6 +109,18 @@ public class GameSessionController : ControllerBase
             return NotFound();
         }
 
+        var question = _context.Questions.Find(questionId);
+        if (question == null)
+        {
+            return NotFound();
+        }
+        
+        var answer = _context.Answers.Find(answerId);
+        if (answer == null)
+        {
+            return NotFound();
+        }
+        
         var existingQuestion = session.GameSessionAnswers.FirstOrDefault(sq => sq.QuestionId == questionId);
         if (existingQuestion != null)
         {
@@ -112,16 +132,42 @@ public class GameSessionController : ControllerBase
             return BadRequest();
         }
 
-        //To be replaced after debugging
-        var nextQuestion = GetNextQuestion(session);
-        if (nextQuestion == null)
+        var engine = _inferenceEngineFactory.ConstructInferenceEngine(sessionId);
+
+        foreach (var clause in _clauseParser.Parse(question, answer))
         {
-            session.GameStage = new[] { GameStage.Suggesting, GameStage.UnableToSuggest }[_random.Next(2)];
+            engine.AddFact(clause);
+        }
+        
+        var unprovedConditions = new List<BaseClause>();
+        var conclusion = engine.InferBackward(unprovedConditions); //forward chain
+
+        //DEBUG: Test mode for game optomization
+        if (conclusion == null)
+        {
+            var simplifiedConditions = unprovedConditions.Simplify();
+
+            foreach (var clause in simplifiedConditions)
+            {
+                engine.AddFact(clause);
+            }
+
+            conclusion = engine.InferBackward(unprovedConditions);
         }
 
-        if (session.GameStage == GameStage.Suggesting)
+        if (conclusion != null)
         {
-            session.Solution = "COBOL on Wheelchair";
+            session.GameStage = GameStage.Suggesting;
+            session.Solution = conclusion.Value;
+            session.OriginallySupposedSolution = conclusion.Value;
+        }
+        else
+        {
+            var nextQuestion = GetNextQuestion(session);
+            if (nextQuestion == null)
+            {
+                session.GameStage = GameStage.UnableToSuggest;
+            }
         }
 
         _context.SaveChanges();
@@ -205,17 +251,33 @@ public class GameSessionController : ControllerBase
 
         return _mapper.Map<GameSessionResponse>(session);
     }
-    
-    
+
+
     private Question? GetNextQuestion(GameSession session)
     {
+        var engine = _inferenceEngineFactory.ConstructInferenceEngine(session.Id);
+        
+        var unprovedConditions = new List<BaseClause>();
+        var conclusion = engine.InferBackward(unprovedConditions); //forward chain
+
+        //DEBUG: Test mode for game optomization
+        if (conclusion != null)
+        {
+            return null;
+        }
+        
+        var simplifiedConditions = unprovedConditions.Simplify();
+        var unprovedQuestionsVariables = simplifiedConditions.Select(c => c.Variable).Distinct().ToArray();
+            
         var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
 
         var question = _context.Questions
             .Include(q => q.PossibleAnswers)
             .Where(q => !userQuestionIds.Contains(q.Id))
-            .OrderBy(q => Guid.NewGuid())
+            .OrderBy(q => unprovedQuestionsVariables.Contains(q.VariableName))
+            .ThenBy(q => Guid.NewGuid())
             .FirstOrDefault();
+
         return question;
     }
 }

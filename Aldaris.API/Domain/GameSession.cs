@@ -12,8 +12,8 @@ public class GameSession
 
     public string? Solution { get; set; }
     
-    public string? OriginallySuggestedSolution { get; set; }
-
+    public string? OriginallySupposedSolution { get; set; }
+    
     public ICollection<Question> Questions { get; set; } = new List<Question>();
     public ICollection<Answer> Answers { get; set; } = new List<Answer>();
     public List<GameSessionAnswer> GameSessionAnswers { get; set; } = new();

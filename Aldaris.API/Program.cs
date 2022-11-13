@@ -16,6 +16,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(AldarisMapperConfiguration));
 
+builder.Services.AddTransient<ClauseParser>();
+builder.Services.AddTransient<InferenceEngineFactory>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

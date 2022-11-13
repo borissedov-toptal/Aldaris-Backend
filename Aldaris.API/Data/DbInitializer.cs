@@ -1,3 +1,4 @@
+using System.Data;
 using Aldaris.API.Domain;
 using Aldaris.ExpertSystem.Clauses;
 
@@ -13,71 +14,181 @@ public static class DbInitializer
             return; // DB has been seeded
         }
 
-        //
-        // var answers = new Answer[]
-        // {
-        //     new Answer("Sir Lancelot of Camelot." },
-        //     new Answer("Sir Robin of Camelot." },
-        //     new Answer("Sir Galahad of Camelot." },
-        //     new Answer("It is 'Arthur', King of the Britons." },
-        //     new Answer("To seek the Holy Grail." },
-        //     new Answer("Blue." },
-        //     new Answer("Blue. No, yel-- auuuuuuuugh!" },
-        //     new Answer("I don't know that! Auuuuuuuugh!" },
-        //     new Answer("What do you mean? An African or European swallow?" }
-        // };
-        //
-        // context.Answers.AddRange(answers);
-        // context.SaveChanges();
+        var kbCompilationCompilable = new KnowledgeBaseFact("compilation = compilable");
+        var kbCompilationInterpreted = new KnowledgeBaseFact("compilation = interpreted");
+        var kbUsesVMYes = new KnowledgeBaseFact("uses_virtual_machine = yes");
+        var kbUsesVMNo = new KnowledgeBaseFact("uses_virtual_machine = no");
+        var ImplementsOOPYes = new KnowledgeBaseFact("implements_oop = yes");
+        var ImplementsOOPNo = new KnowledgeBaseFact("implements_oop = no");
 
+        var rules = new[]
+        {
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = C#"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    new KnowledgeBaseFact("release_year = 2000"),
+                    kbUsesVMYes,
+                    ImplementsOOPYes
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Swift"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    new KnowledgeBaseFact("release_year = 2014"),
+                    kbUsesVMNo,
+                    ImplementsOOPYes,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Python"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationInterpreted,
+                    new KnowledgeBaseFact("release_year = 1991"),
+                    kbUsesVMNo,
+                    ImplementsOOPYes,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Pascal"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    new KnowledgeBaseFact("release_year = 1970"),
+                    kbUsesVMNo,
+                    ImplementsOOPNo,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Java"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    ImplementsOOPYes,
+                    new KnowledgeBaseFact("release_year = 1995"),
+                    kbUsesVMYes,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = C++"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    ImplementsOOPYes,
+                    new KnowledgeBaseFact("release_year = 1985"),
+                    kbUsesVMNo,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Assembler"))
+            {
+                Antecedents = new[]
+                {
+                    ImplementsOOPNo,
+                    new KnowledgeBaseFact("release_year = 1947"),
+                    kbUsesVMNo,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = COBOL"))
+            {
+                Antecedents = new[]
+                {
+                    new KnowledgeBaseFact("release_year = 1959"),
+                    kbUsesVMNo,
+                }
+            },
+            new KnowledgeBaseRule(new KnowledgeBaseFact("programming_language = Go"))
+            {
+                Antecedents = new[]
+                {
+                    kbCompilationCompilable,
+                    new KnowledgeBaseFact("release_year = 2009"),
+                    kbUsesVMNo,
+                    ImplementsOOPYes,
+                }
+            },
+            // new KnowledgeBaseRule(new KnowledgeBaseFact("release_year_range = 1940-1960"))
+            // {
+            //     Antecedents = new[]
+            //     {
+            //         new KnowledgeBaseFact("release_year >= 1940"),
+            //         new KnowledgeBaseFact("release_year <= 1960")
+            //     }
+            // },
+            // new KnowledgeBaseRule(new KnowledgeBaseFact("release_year_range = 1961-1980"))
+            // {
+            //     Antecedents = new[]
+            //     {
+            //         new KnowledgeBaseFact("release_year > 1960"),
+            //         new KnowledgeBaseFact("release_year <= 1980")
+            //     }
+            // },
+            // new KnowledgeBaseRule(new KnowledgeBaseFact("release_year_range = 1981-2000"))
+            // {
+            //     Antecedents = new[]
+            //     {
+            //         new KnowledgeBaseFact("release_year > 1980"),
+            //         new KnowledgeBaseFact("release_year <= 2000")
+            //     }
+            // },
+            // new KnowledgeBaseRule(new KnowledgeBaseFact("release_year_range = after2000"))
+            // {
+            //     Antecedents = new[]
+            //     {
+            //         new KnowledgeBaseFact("release_year > 2000"),
+            //     }
+            // }
+        };
+
+        var answerYes = new Answer("Yes", "=", "yes");
+        var answerNo = new Answer("No", "=", "no");
 
         var questions = new Question[]
         {
-            new( "What... is your name?", "name")
+            new("Does your programming language usually require a virtual machine to execute a program?",
+                "uses_virtual_machine")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("Sir Lancelot of Camelot.", nameof(IsClause), "Lancelot"),
-                    new("Sir Robin of Camelot." , nameof(IsClause), "Robin"),
-                    new("Sir Galahad of Camelot." , nameof(IsClause), "Galahad"),
-                    new("It is 'Arthur', King of the Britons." , nameof(IsClause), "Arthur"),
+                    answerYes,
+                    answerNo
                 }
             },
-            new ("What... is your quest?", "quest")
+            new("Does your programming language implement OOP paradigm?", "implements_oop")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("To seek the Holy Grail." , nameof(IsClause), "Seek the Grail"),
-                    new("I seek the Grail." , nameof(IsClause), "Seek the Grail")
+                    answerYes,
+                    answerNo
                 }
             },
-            new ("What... is your favourite color?", "favouriteColor")
+            new("How does a program written on your programming language be running?", "compilation")
             {
                 PossibleAnswers = new Answer[]
                 {
-                    new("Blue." , nameof(IsClause), "Blue"),
-                    new("Blue. No, yel-- auuuuuuuugh!", nameof(IsClause), "Blue" )
+                    new("It requires compilation. Then a machine will will run it.", "=", "compilable"),
+                    new("It will be executed by Interpreter.", "=", "interpreted")
                 }
             },
-            new("What... is a capital of Assyria?", "capitalOfAssyria")
+            new("When was your programming language initially released?", "release_year")
             {
+                //1940-1960, 1961-1980, 1980-2000, after 2000
                 PossibleAnswers = new Answer[]
                 {
-                    new("I don't know that! Auuuuuuuugh!", nameof(IsClause), String.Empty)
-                }
-            },
-            new( "What... is the air-speed velocity of an unladen swallow?", "swallowSpeed")
-            {
-                PossibleAnswers = new Answer[]
-                {
-                    new("What do you mean? An African or European swallow?" , nameof(IsClause), String.Empty)
+                    new("1940 - 1960", "&&", "release_year >= 1940 && release_year <= 1960"),
+                    new("1961-1980", "&&", "release_year > 1961 && release_year <= 1980"),
+                    new("1980-2000", "&&", "release_year > 1981 release_year <= 2000"),
+                    new("after 2000", ">", "2000"),
                 }
             }
         };
 
+        context.Rules.AddRange(rules);
         context.Questions.AddRange(questions);
         context.SaveChanges();
-
         context.SaveChanges();
     }
 }

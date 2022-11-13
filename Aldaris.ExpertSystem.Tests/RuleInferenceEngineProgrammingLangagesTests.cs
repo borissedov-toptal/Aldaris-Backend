@@ -69,6 +69,25 @@ public class RuleInferenceEngineProgrammingLangagesTests
         rule.AddAntecedent(new IsClause("uses_virtual_machine", "no"));
         rule.AddAntecedent(new IsClause("implements_oop", "yes"));
         _engine.AddRule(rule);
+
+        // rule = new Rule(new IsClause("release_year_range", "1940-1960"));
+        // rule.AddAntecedent(new GreaterOrEqualClause("release_year", "1940"));
+        // rule.AddAntecedent(new LessOrEqualClause("release_year", "1960"));
+        // _engine.AddRule(rule);
+        //
+        // rule = new Rule(new IsClause("release_year_range", "1961-1980"));
+        // rule.AddAntecedent(new GreaterClause("release_year", "1960"));
+        // rule.AddAntecedent(new LessOrEqualClause("release_year", "1980"));
+        // _engine.AddRule(rule);
+        //
+        // rule = new Rule(new IsClause("release_year_range", "1981-2000"));
+        // rule.AddAntecedent(new GreaterClause("release_year", "1980"));
+        // rule.AddAntecedent(new LessOrEqualClause("release_year", "2000"));
+        // _engine.AddRule(rule);
+        //
+        // rule = new Rule(new IsClause("release_year_range", "after2000"));
+        // rule.AddAntecedent(new GreaterClause("release_year", "2000"));
+        // _engine.AddRule(rule);
     }
 
     [Test]
@@ -79,8 +98,8 @@ public class RuleInferenceEngineProgrammingLangagesTests
         _engine.AddFact(new GreaterOrEqualClause("release_year", "2005"));
         _engine.AddFact(new IsClause("implements_oop", "yes"));
         _engine.AddFact(new IsClause("uses_virtual_machine", "no"));
-        
-        List<BaseClause> unprovedConditions = new ();
+
+        List<BaseClause> unprovedConditions = new();
 
         BaseClause? conclusion = _engine.InferBackward(unprovedConditions);
 
@@ -89,16 +108,20 @@ public class RuleInferenceEngineProgrammingLangagesTests
         Assert.NotNull(conclusion);
         Assert.That(conclusion!.Value, Is.EqualTo("Go"));
     }
-    
+
     [Test]
     public void TestBackwardChainForSingleFact()
     {
-        _engine.AddFact(new IsClause("release_year", "1959"));
+        // _engine.AddFact(new IsClause("release_year", "1959"));
+        // _engine.AddFact(new IsClause("release_year_range", "1940-1960"));
+        // _engine.AddFact(new IsClause("uses_virtual_machine", "no"));
+        // _engine.AddFact(new IsClause("compilation", "compilable"));
+        _engine.AddFact(new GreaterClause("release_year", "1940"));
+        _engine.AddFact(new LessOrEqualClause("release_year", "1960"));
 
-        _engine.InferForward();
 
         var unprovedConditions = new List<BaseClause>();
-        var conclusion= _engine.InferBackward(unprovedConditions); //forward chain
+        var conclusion = _engine.InferBackward(unprovedConditions); //forward chain
 
         var simplifiedConditions = unprovedConditions.Simplify();
 
@@ -106,6 +129,7 @@ public class RuleInferenceEngineProgrammingLangagesTests
         {
             _engine.AddFact(clause);
         }
+
         conclusion = _engine.InferBackward(unprovedConditions); //forward chain
 
         Assert.NotNull(conclusion);

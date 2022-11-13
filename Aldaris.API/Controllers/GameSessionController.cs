@@ -118,6 +118,15 @@ public class GameSessionController : ControllerBase
         {
             session.GameStage = forceGameSessionStage.Value;
         }
+        else
+        {
+            var userQuestionIds = session.Questions.Select(q => q.Id).ToArray();
+
+            if (!_context.Questions.Any(q => !userQuestionIds.Contains(q.Id)))
+            {
+                session.GameStage = new[] { GameStage.Suggesting, GameStage.UnableToSuggest }[_random.Next(2)];
+            }
+        }
 
         if (session.GameStage == GameStage.Suggesting)
         {
@@ -165,7 +174,7 @@ public class GameSessionController : ControllerBase
             });
 
             session.GameStage = GameStage.InProgress;
-            
+
             _context.SaveChanges();
         }
 

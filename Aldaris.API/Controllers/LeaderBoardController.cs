@@ -31,11 +31,12 @@ public class LeaderBoardController : ControllerBase
                         : x.GameStage == GameStage.Resolved
                             ? 50
                             : 0),
-                    true
+                    true,
+                    g.Max(x => x.CreatedAt)
                 )
-            )
-            .ToArray()
+            ).ToArray()
             .OrderByDescending(x => x.Score)
+            .ThenByDescending(x => x.LastPlayedLastPlayedDate)
             .Take(count)
             .ToArray();
     }

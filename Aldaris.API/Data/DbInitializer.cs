@@ -180,7 +180,7 @@ public static class DbInitializer
                 {
                     new("1940 - 1960", "&&", "release_year >= 1940 && release_year <= 1960"),
                     new("1961-1980", "&&", "release_year > 1961 && release_year <= 1980"),
-                    new("1980-2000", "&&", "release_year > 1981 release_year <= 2000"),
+                    new("1980-2000", "&&", "release_year > 1981 && release_year <= 2000"),
                     new("after 2000", ">", "2000"),
                 }
             }

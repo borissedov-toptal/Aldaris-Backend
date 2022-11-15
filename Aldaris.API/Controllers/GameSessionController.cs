@@ -143,17 +143,17 @@ public class GameSessionController : ControllerBase
         var conclusion = engine.InferBackward(unprovedConditions); //forward chain
 
         //DEBUG: Test mode for game optomization
-        if (conclusion == null)
-        {
-            var simplifiedConditions = unprovedConditions.Simplify();
-
-            foreach (var clause in simplifiedConditions)
-            {
-                engine.AddFact(clause);
-            }
-
-            conclusion = engine.InferBackward(unprovedConditions);
-        }
+        // if (conclusion == null)
+        // {
+        //     var simplifiedConditions = unprovedConditions.Simplify();
+        //
+        //     foreach (var clause in simplifiedConditions)
+        //     {
+        //         engine.AddFact(clause);
+        //     }
+        //
+        //     conclusion = engine.InferBackward(unprovedConditions);
+        // }
 
         if (conclusion != null)
         {
